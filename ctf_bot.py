@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from bot_token import TOKEN
+import base64
 
 
 class CTFTools(commands.Cog):
@@ -11,18 +12,19 @@ class CTFTools(commands.Cog):
     async def on_ready(self):
         print("login")
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        # don't respond to ourselves
-        if message.author == self.bot.user:
-            return
-
-        if message.content == 'ping':
-            await message.channel.send('pong')
 
     @commands.command()
-    async def ping(self, ctx):
-        await ctx.send('pong')
+    async def base64(self, ctx, mode, arg):
+        flag = ""
+
+        if mode == "-e":
+            flag = base64.b64encode(arg.encode("utf-8")).decode("utf-8")
+        elif mode == "-d":
+            flag = base64.b64decode(arg.encode("utf-8")).decode("utf-8")
+        else:
+            await ctx.send("option `mode` must be `-e` or `-d`")
+            return
+        await ctx.send(flag)
 
 
 if __name__ == "__main__":
