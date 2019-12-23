@@ -73,6 +73,16 @@ class CTFTools(commands.Cog):
         await ctx.send(flag.decode("utf-8"))
 
 
+    @commands.command(name="hex")
+    async def _hex(self, ctx, string):
+        flag = "0x"
+
+        for c in string:
+            flag += hex(ord(c))[2:]
+
+        await ctx.send(flag)
+
+
 if __name__ == "__main__":
     bot = commands.Bot(command_prefix="!")
     bot.add_cog(CTFTools(bot))
