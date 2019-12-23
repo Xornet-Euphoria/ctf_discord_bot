@@ -22,7 +22,7 @@ class CTFTools(commands.Cog):
         elif mode == "-d":
             flag = base64.b64decode(arg.encode("utf-8")).decode("utf-8")
         else:
-            await ctx.send("option `mode` must be `-e` or `-d`")
+            await ctx.send("[usage]: !base64 <mode (`-d` or `-e`)> <string>")
             return
         await ctx.send(flag)
 
@@ -42,14 +42,10 @@ class CTFTools(commands.Cog):
 
         for c in s:
             if 'a' <= c <= 'z':
-                print("a")
                 flag += chr(((ord(c) - ord('a')) + n) % 26 + ord('a'))
-                print(flag)
             elif 'A' <= c <= 'Z':
-                print("b")
                 flag += chr(((ord(c) - ord('A')) + n) % 26 + ord('A'))
             else:
-                print("c")
                 flag += c
 
         await ctx.send(flag)
