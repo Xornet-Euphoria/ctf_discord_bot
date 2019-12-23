@@ -27,6 +27,34 @@ class CTFTools(commands.Cog):
         await ctx.send(flag)
 
 
+    @commands.command()
+    async def rot13(self, ctx, *args):
+        flag = ""
+        if len(args) == 0:
+            await ctx.send("[usage]: !rot13 <string> <num (optional)>")
+            return
+        
+        s = args[0]
+        if len(args) == 1:
+            n = 13
+        else:
+            n = int(args[1]) % 26
+
+        for c in s:
+            if 'a' <= c <= 'z':
+                print("a")
+                flag += chr(((ord(c) - ord('a')) + n) % 26 + ord('a'))
+                print(flag)
+            elif 'A' <= c <= 'Z':
+                print("b")
+                flag += chr(((ord(c) - ord('A')) + n) % 26 + ord('A'))
+            else:
+                print("c")
+                flag += c
+
+        await ctx.send(flag)
+
+
 if __name__ == "__main__":
     bot = commands.Bot(command_prefix="!")
     bot.add_cog(CTFTools(bot))
