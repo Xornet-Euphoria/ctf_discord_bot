@@ -35,10 +35,10 @@ class CTFTools(commands.Cog):
             return
         
         s = args[0]
-        if len(args) == 1:
-            n = 13
-        else:
+        if len(args) > 1 and args[1].isdecimal():
             n = int(args[1]) % 26
+        else:
+            n = 13
 
         for c in s:
             if 'a' <= c <= 'z':
