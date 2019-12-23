@@ -50,6 +50,28 @@ class CTFTools(commands.Cog):
 
         await ctx.send(flag)
 
+    @commands.command()
+    async def ascii(self, ctx, hex_string):
+        if len(hex_string) < 2:
+            await ctx.send("please give a string of length at least 2")
+            return
+
+        if len(hex_string) % 2 != 0:
+            await ctx.send("please give a string whose length is a multiple of 2")
+            return
+
+        if hex_string[0:2] == "0x":
+            hex_string = hex_string[2:]
+
+        flag = ""
+        try:
+            flag = bytes.fromhex(hex_string)
+        except ValueError:
+            await ctx.send("please give a valid string as a hexadecimal number")
+            return
+
+        await ctx.send(flag.decode("utf-8"))
+
 
 if __name__ == "__main__":
     bot = commands.Bot(command_prefix="!")
