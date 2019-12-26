@@ -42,20 +42,26 @@ class Notification(commands.Cog):
         if len(args) == 0:
             # そのうち複数対応にするかもしれないのでこうしてる
             limit = 1
+        else:
+            if args[0].isdecimal():
+                limit = args[0]
+            else:
+                limit = 1
 
         api_args = {
             "limit": limit
         }
 
-        ctf_data = get_event_api(api_args)[0]
+        ctfs = get_event_api(api_args)
 
-        title = ctf_data["title"]
-        desc = ctf_data["description"]
-        url = ctf_data["url"]
-        start = ctf_data["start"]
-        finish = ctf_data["finish"]
+        for ctf_data in ctfs:
+            title = ctf_data["title"]
+            desc = ctf_data["description"]
+            url = ctf_data["url"]
+            start = ctf_data["start"]
+            finish = ctf_data["finish"]
 
-        msg = "title: {}\ndescription: {}\nurl: {}\ndate: {} ~ {}".format(title, desc, url, start, finish)
+            msg = "title: {}\ndescription: {}\nurl: {}\ndate: {} ~ {}".format(title, desc, url, start, finish)
 
-        await ctx.send(msg)
+            await ctx.send(msg)
 
