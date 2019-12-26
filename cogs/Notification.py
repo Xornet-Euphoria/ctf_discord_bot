@@ -3,6 +3,35 @@ import requests
 import json
 
 
+def get_event_api(args):
+    target = "https://ctftime.org/api/v1/events/?limit={}&start={}&finish={}"
+    header = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0"
+    }
+    
+    limit = None
+    start = None
+    finish = None
+    if "limit" in args.keys():
+        limit = args["limit"]
+
+    if "start" in args.keys():
+        start = args["start"]
+
+    if "finish" in args.keys():
+        finish = args["finish"]
+
+    target = target.format(limit, start, finish)
+
+    req = requests.get(target, headers=header)
+
+    if req.status_code != 200:
+        # todo: error handling
+        return
+
+    return json.loads(req.text)
+
+
 class Notification(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -10,22 +39,15 @@ class Notification(commands.Cog):
 
     @commands.command()
     async def next(self, ctx, *args):
-        target = "https://ctftime.org/api/v1/events/?limit={}"
-        header = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:71.0) Gecko/20100101 Firefox/71.0"
-        }
-
         if len(args) == 0:
             # そのうち複数対応にするかもしれないのでこうしてる
             limit = 1
-        
-        req = requests.get(target.format(limit), headers=header)
 
-        if req.status_code != 200:
-            await ctx.send("[+]: an error occurred. Status code: {}".format(req.status_code))
-            return
+        api_args = {
+            "limit": limit
+        }
 
-        ctf_data = json.loads(req.text)[0]
+        ctf_data = get_event_api(api_args)[0]
 
         title = ctf_data["title"]
         desc = ctf_data["description"]
